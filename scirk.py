@@ -1,28 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-beta = 0.2
-gamma = 1 / 10
-N = 1000
-I0, R0, S0 = 1, 0, N-1
-start = 1
-end = 100
-dh = 1
-timex = [x for x in range(1,100)]
 
-def dsdt(st, it):
-    return -(-beta * st * it) / N
+class SIRModel:
+    def __init__(self, N, beta=0.2, gamma=1 / 10):
+        self.N = N
+        self.beta = beta
+        self.gamma = gamma
+        self.init_infected = 1
+        self.init_recovered = 0
+        self.init_susceptible = N - 1
+
+    def dsdt(self, curr_susceptible, curr_infected):
+        return -(-self.beta * curr_susceptible * curr_infected) / self.N
+
+    def didt(self, curr_susceptible, curr_infected):
+        return ((self.beta * curr_susceptible * curr_infected) / self.N) - (self.gamma * it)
+
+    def drdt(self, curr_infected):
+        return self.gamma * curr_infected
+
+    def simulate(self, time_steps):
+        # return 3 buffers of length time_steps for the infected/recovered/susceptible values
+        return None, None, None
 
 
-def didt(st, it):
-    return ((beta * st * it) / N) - (gamma * it)
-
-
-def drdt(st, it):
-    return gamma * it
-
-
-
-def rk4():
-    finallist = []
-    k1 = df()
+model = SIRModel(N=1000)
+infected, recovered, susceptible = model.simulate(100)
