@@ -21,9 +21,32 @@ class SIRModel:
         return self.gamma * curr_infected
 
     def simulate(self, time_steps):
-        # return 3 buffers of length time_steps for the infected/recovered/susceptible values
-        return None, None, None
+        # return 3 buffers of length time_steps+1 for the infected/recovered/susceptible values
+        infected = np.zeros(time_steps + 1)
+        recovered = np.zeros(time_steps + 1)
+        susceptible = np.zeros(time_steps + 1)
+        infected[0] = self.init_infected
+        recovered[0] = self.init_recovered
+        susceptible[0] = self.init_susceptible
+        
+        for i in range(1, time_steps+1):
+            next_values = self.simulate_step(
+                curr_infected=infected[i-1],
+                curr_recovered=recovered[i-1],
+                curr_susceptible=susceptible[i-1],
+            )
+            infected[i] = next_values[0]
+            recovered[i] = next_values[1]
+            susceptible[i] = next_values[2]
+            
+        return infected, recovered, susceptible
+
+    def simulate_step(self, curr_infected, curr_recovered, curr_susceptible):
+        # Compute next values of infected/recovered/susceptible
+        next_infected, next_recovered, next_susceptible = curr_infected, curr_recovered, curr_susceptible
+        return next_infected, next_recovered, next_susceptible
 
 
-model = SIRModel(N=1000)
-infected, recovered, susceptible = model.simulate(100)
+if __name__ == '__main__':
+    model = SIRModel(N=1000)
+    infected, recovered, susceptible = model.simulate(100)
